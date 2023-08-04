@@ -5,12 +5,12 @@ export const defaultTimelineKeyframeStyle = {
   /**
    * keyframe fill color.
    */
-  fillColor: 'DarkOrange',
+  fillColor: '#FFFFFF',
   shape: TimelineKeyframeShape.Rhomb,
   /**
    * Selected keyframe fill color.
    */
-  selectedFillColor: 'red',
+  selectedFillColor: '#FFEE32',
   strokeColor: 'black',
   selectedStrokeColor: 'black',
   strokeThickness: 0.2,

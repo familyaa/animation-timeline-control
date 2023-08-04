@@ -547,6 +547,7 @@ export declare class Timeline extends TimelineEventsEmitter {
     _emitDragFinishedEvent: (dragState: TimelineDraggableData, forcePrevent?: boolean) => TimelineDragEvent | null;
     _preventDrag: (dragArgs: TimelineDragEvent, data: TimelineDraggableData, toStart?: boolean) => void;
     _emitDragEvent: (dragState: TimelineDraggableData) => TimelineDragEvent | null;
+    _emitGroupSelected: (state: any) => TimelineSelectedEvent;
     _emitKeyframesSelected: (state: TimelineSelectionResults) => TimelineSelectedEvent;
     _getDragEventArgs: (dragState: TimelineDraggableData, point: TimelineMouseData | null) => TimelineDragEvent;
 }

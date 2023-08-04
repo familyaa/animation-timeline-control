@@ -399,8 +399,8 @@ export class Timeline extends TimelineEventsEmitter {
       if (!this._isPanStarted) {
         this._clearScrollFinishedTimer();
 
-        this.rescale();
-        this.redraw();
+        // this.rescale();
+        // this.redraw();
       }
       this._emitScrollEvent(args, scrollProgrammatically, TimelineEvents.ScrollFinished);
     }, this._consts.scrollFinishedTimeoutMs);
@@ -611,6 +611,7 @@ export class Timeline extends TimelineEventsEmitter {
             return this._setElementDragState(this._convertToTimelineElement(this._drag?.target.row || null, keyframe), keyframe.val);
           });
         }
+        this._emitGroupSelected({ drag: this._drag, mode: 'group' });
       } else {
         this._drag.elements = [this._drag.target];
       }
@@ -901,7 +902,7 @@ export class Timeline extends TimelineEventsEmitter {
    */
   _performClick = (pos: TimelineMouseData, drag: TimelineDraggableData | null): boolean => {
     let isChanged = false;
-    if (drag && drag.type === TimelineElementType.Keyframe) {
+    if (drag && (drag.type === TimelineElementType.Keyframe || drag.type === TimelineElementType.Group)) {
       let mode = TimelineSelectionMode.Normal;
       if (this._startedDragWithCtrl && this._controlKeyPressed(pos.args)) {
         if (this._controlKeyPressed(pos.args)) {
@@ -1792,6 +1793,8 @@ export class Timeline extends TimelineEventsEmitter {
         this._ctx.fillStyle = keyframeLaneColor;
         const rect = rectBounds.rect;
         this._ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+        this._ctx.strokeStyle  = '#FFEE32';
+        this._ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
       }
     });
   };
@@ -2770,6 +2773,15 @@ export class Timeline extends TimelineEventsEmitter {
     if (args.isPrevented()) {
       this._preventDrag(args, dragState, false);
     }
+    return args;
+  };
+  _emitGroupSelected = (state: any): TimelineSelectedEvent => {
+    const args = new TimelineSelectedEvent();
+    // args.selected = state.selected;
+    // args.changed = state.changed;
+    args.drag = state.drag;
+    args.mode = state.mode;
+    this.emit<TimelineSelectedEvent>(TimelineEvents.Selected, args);
     return args;
   };
   _emitKeyframesSelected = (state: TimelineSelectionResults): TimelineSelectedEvent => {

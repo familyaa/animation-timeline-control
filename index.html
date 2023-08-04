@@ -233,83 +233,83 @@
         },
       };
       let rows = [
-        {
-          selected: false,
-          draggable: false,
+        // {
+        //   selected: false,
+        //   draggable: false,
 
-          keyframes: [
-            {
-              val: 40,
-              shape: 'rhomb',
-            },
-            {
-              shape: 'rhomb',
-              val: 3000,
-              selected: false,
-            },
-          ],
-        },
-        {
-          selected: false,
-          keyframes: [
-            {
-              style:{
-                cursor: 'default',
-              },
-              val: 2000,
-            },
-            {
-              val: 2500,
-            },
-            {
-              val: 2600,
-            },
-          ],
-        },
-        {
-          keyframes: [
-            {
-              val: 1000,
-            },
-            {
-              val: 1500,
-            },
-            {
-              val: 2000,
-            },
-          ],
-        },
-        {
-          title: 'Groups (Limited)',
-          keyframes: [
-            {
-              val: 40,
-              max: 850,
-              group: 'a',
-            },
-            {
-              val: 800,
-              max: 900,
-              group: 'a',
-            },
-            {
-              min: 1000,
-              max: 3400,
-              val: 1900,
-              group: 'b',
-            },
-            {
-              val: 3000,
-              max: 3500,
-              group: 'b',
-            },
-            {
-              min: 3500,
-              val: 4000,
-              group: 'c',
-            },
-          ],
-        },
+        //   keyframes: [
+        //     {
+        //       val: 40,
+        //       shape: 'rhomb',
+        //     },
+        //     {
+        //       shape: 'rhomb',
+        //       val: 3000,
+        //       selected: false,
+        //     },
+        //   ],
+        // },
+        // {
+        //   selected: false,
+        //   keyframes: [
+        //     {
+        //       style:{
+        //         cursor: 'default',
+        //       },
+        //       val: 2000,
+        //     },
+        //     {
+        //       val: 2500,
+        //     },
+        //     {
+        //       val: 2600,
+        //     },
+        //   ],
+        // },
+        // {
+        //   keyframes: [
+        //     {
+        //       val: 1000,
+        //     },
+        //     {
+        //       val: 1500,
+        //     },
+        //     {
+        //       val: 2000,
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: 'Groups (Limited)',
+        //   keyframes: [
+        //     {
+        //       val: 40,
+        //       // max: 850,
+        //       group: 'a',
+        //     },
+        //     {
+        //       val: 800,
+        //       // max: 900,
+        //       group: 'a',
+        //     },
+        //     {
+        //       min: 1000,
+        //       // max: 3400,
+        //       val: 1900,
+        //       group: 'b',
+        //     },
+        //     {
+        //       val: 3000,
+        //       // max: 3500,
+        //       group: 'b',
+        //     },
+        //     {
+        //       min: 3500,
+        //       val: 4000,
+        //       group: 'c',
+        //     },
+        //   ],
+        // },
         {
           title: 'Groups Different Styles',
           keyframes: [
@@ -335,92 +335,92 @@
             },
           ],
         },
-        {
-          keyframes: [
-            {
-              val: 100,
-            },
-            {
-              val: 3410,
-            },
-            {
-              val: 2000,
-            },
-          ],
-        },
-        {
-          title: 'Keyframe Style Customized',
-          style: {
-            groupsStyle: {
-              height: 5,
-              marginTop: "auto"
-            },
-            keyframesStyle: {
-              shape: 'rect',
-              width: 5,
-              height: 20,
-            }
-          },
-          keyframes: [
-            {
-              val: 90,
-            },
-            {
-              val: 3000,
-            },
-          ],
-        },
-        {},
-        {
-          title: 'Max Value (Not Draggable)',
-          max: 4000,
-          keyframes: [
-            {
-              style: {
-                width: 4,
-                height: 20,
-                group: 'block',
-                shape: 'rect',
-                fillColor: 'Red',
-                strokeColor: 'Black',
-              },
-              val: 4000,
-              selectable: false,
-              draggable: false,
-            },
-            {
-              val: 1500,
-            },
-            {
-              val: 2500,
-            },
-          ],
-        },
-        {},
-        {},
-        {
-          title: 'Custom Height',
-          style: {
-            height: 100,
-            keyframesStyle: {
-              shape: 'rect',
-              width: 4,
-              height: 70,
-            },
-          },
+        // {
+        //   keyframes: [
+        //     {
+        //       val: 100,
+        //     },
+        //     {
+        //       val: 3410,
+        //     },
+        //     {
+        //       val: 2000,
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: 'Keyframe Style Customized',
+        //   style: {
+        //     groupsStyle: {
+        //       height: 5,
+        //       marginTop: "auto"
+        //     },
+        //     keyframesStyle: {
+        //       shape: 'rect',
+        //       width: 5,
+        //       height: 20,
+        //     }
+        //   },
+        //   keyframes: [
+        //     {
+        //       val: 90,
+        //     },
+        //     {
+        //       val: 3000,
+        //     },
+        //   ],
+        // },
+        // {},
+        // {
+        //   title: 'Max Value (Not Draggable)',
+        //   max: 4000,
+        //   keyframes: [
+        //     {
+        //       style: {
+        //         width: 4,
+        //         height: 20,
+        //         group: 'block',
+        //         shape: 'rect',
+        //         fillColor: 'Red',
+        //         strokeColor: 'Black',
+        //       },
+        //       val: 4000,
+        //       selectable: false,
+        //       draggable: false,
+        //     },
+        //     {
+        //       val: 1500,
+        //     },
+        //     {
+        //       val: 2500,
+        //     },
+        //   ],
+        // },
+        // {},
+        // {},
+        // {
+        //   title: 'Custom Height',
+        //   style: {
+        //     height: 100,
+        //     keyframesStyle: {
+        //       shape: 'rect',
+        //       width: 4,
+        //       height: 70,
+        //     },
+        //   },
 
-          keyframes: [
-            {
-              val: 40,
-              max: 850,
-              group: 'a',
-            },
-            {
-              val: 8600,
-              group: 'a',
-            },
-          ],
-        },
+        //   keyframes: [
+        //     {
+        //       val: 40,
+        //       max: 850,
+        //       group: 'a',
+        //     },
+        //     {
+        //       val: 8600,
+        //       group: 'a',
+        //     },
+        //   ],
+        // },
       ];
       return rows;
     }
@@ -466,7 +466,7 @@
       }
     }
     timeline.onSelected(function (obj) {
-      logMessage('Selected Event: (' + obj.selected.length + '). changed selection :' + obj.changed.length, 2);
+      logMessage('Selected Event111: (' + obj.selected.length + '). changed selection :' + obj.changed.length, 2);
     });
     timeline.onDragStarted(function (obj) {
       logDraggingMessage(obj, 'dragstarted');
@@ -475,7 +475,7 @@
       logDraggingMessage(obj, 'drag');
     });
     timeline.onKeyframeChanged(function (obj) {
-      console.log('keyframe: ' + obj.val);
+      console.log('keyframe111: ' + obj.val);
     });
     timeline.onDragFinished(function (obj) {
       logDraggingMessage(obj, 'dragfinished');

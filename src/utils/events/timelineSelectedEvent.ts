@@ -1,5 +1,7 @@
 import { TimelineSelectionEventSource } from '../../enums/timelineSelectionEventSource';
 import { TimelineKeyframe } from '../../models/timelineKeyframe';
+import { TimelineGroup } from '../../models/timelineGroup';
+
 
 export class TimelineSelectedEvent {
   /**
@@ -14,4 +16,5 @@ export class TimelineSelectedEvent {
    * Selection mode.
    */
   mode: TimelineSelectionEventSource = TimelineSelectionEventSource.Keyframes;
+  drag: TimelineGroup[] = [];
 }
