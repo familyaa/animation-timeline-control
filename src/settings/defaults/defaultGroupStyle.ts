@@ -7,5 +7,5 @@ export const defaultGroupStyle = {
   /**
    * Default group fill color.
    */
-  fillColor: '#094771',
+  fillColor: '#0B71E6',
 } as TimelineGroupStyle;

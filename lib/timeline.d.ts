@@ -25,6 +25,7 @@ import { TimelineInteractionMode } from './enums/timelineInteractionMode';
 import { TimelineElementType } from './enums/timelineElementType';
 import { TimelineEventSource } from './enums/timelineEventSource';
 import { TimelineSelectionMode } from './enums/timelineSelectionMode';
+import { TimelineSelectionType } from './enums/timelineSelectionType';
 import { TimelineEvents } from './enums/timelineEvents';
 import { TimelineScrollSource } from './enums/timelineScrollSource';
 export declare class Timeline extends TimelineEventsEmitter {
@@ -80,6 +81,7 @@ export declare class Timeline extends TimelineEventsEmitter {
     _drag: TimelineDraggableData | null;
     _startedDragWithCtrl: boolean;
     _startedDragWithShiftKey: boolean;
+    _groupSelected: boolean;
     _scrollProgrammatically: boolean;
     _clickTimeout: number | null;
     _lastClickTime: number;
@@ -298,7 +300,7 @@ export declare class Timeline extends TimelineEventsEmitter {
      * @param nodes keyframe or list of the keyframes to be selected.
      * @param mode selection mode.
      */
-    _selectInternal: (nodes: TimelineKeyframe[] | TimelineKeyframe | null, mode?: TimelineSelectionMode) => TimelineSelectionResults;
+    _selectInternal: (nodes: TimelineKeyframe[] | TimelineKeyframe | null, mode?: TimelineSelectionMode, type?: TimelineSelectionType) => TimelineSelectionResults;
     /**
      * foreach visible keyframe.
      */

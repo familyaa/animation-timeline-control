@@ -229,7 +229,7 @@
       };
       const groupB = {
         style: {
-          marginTop: 6,
+          // marginTop: 6,
         },
       };
       let rows = [
@@ -279,37 +279,37 @@
         //     },
         //   ],
         // },
-        // {
-        //   title: 'Groups (Limited)',
-        //   keyframes: [
-        //     {
-        //       val: 40,
-        //       // max: 850,
-        //       group: 'a',
-        //     },
-        //     {
-        //       val: 800,
-        //       // max: 900,
-        //       group: 'a',
-        //     },
-        //     {
-        //       min: 1000,
-        //       // max: 3400,
-        //       val: 1900,
-        //       group: 'b',
-        //     },
-        //     {
-        //       val: 3000,
-        //       // max: 3500,
-        //       group: 'b',
-        //     },
-        //     {
-        //       min: 3500,
-        //       val: 4000,
-        //       group: 'c',
-        //     },
-        //   ],
-        // },
+        {
+          title: 'Groups (Limited)',
+          keyframes: [
+            {
+              val: 40,
+              // max: 850,
+              group: 'a',
+            },
+            {
+              val: 800,
+              // max: 900,
+              group: 'a',
+            },
+            {
+              min: 1000,
+              // max: 3400,
+              val: 1900,
+              group: 'b',
+            },
+            {
+              val: 3000,
+              // max: 3500,
+              group: 'b',
+            },
+            {
+              min: 3500,
+              val: 4000,
+              group: 'c',
+            },
+          ],
+        },
         {
           title: 'Groups Different Styles',
           keyframes: [
@@ -334,6 +334,7 @@
               group: groupB,
             },
           ],
+          style: 'rgba(11, 113, 230, 0.3)'
         },
         // {
         //   keyframes: [
@@ -481,6 +482,11 @@
       logDraggingMessage(obj, 'dragfinished');
     });
     timeline.onMouseDown(function (obj) {
+      // let selectedRow = obj.elements.find(e => e.type == 'row')
+      // if (selectedRow) {
+      //   selectedRow.row.style = '#0B71E6'
+      // }
+      // timeline.redraw()
       var type = obj.target ? obj.target.type : '';
       logMessage('mousedown:' + obj.val + '.  target:' + type + '. ' + Math.floor(obj.pos.x) + 'x' + Math.floor(obj.pos.y), 2);
     });

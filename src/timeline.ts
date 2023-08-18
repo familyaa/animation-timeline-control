@@ -45,6 +45,8 @@ import { TimelineCursorType } from './enums/timelineCursorType';
 import { TimelineCapShape } from './enums/timelineCapShape';
 import { TimelineEventSource } from './enums/timelineEventSource';
 import { TimelineSelectionMode } from './enums/timelineSelectionMode';
+import { TimelineSelectionType } from './enums/timelineSelectionType';
+
 import { TimelineEvents } from './enums/timelineEvents';
 // @private defaults are exposed:
 
@@ -106,6 +108,7 @@ export class Timeline extends TimelineEventsEmitter {
   _drag: TimelineDraggableData | null = null;
   _startedDragWithCtrl = false;
   _startedDragWithShiftKey = false;
+  _groupSelected = false
   _scrollProgrammatically = false;
   _clickTimeout: number | null = null;
   _lastClickTime = 0;
@@ -593,6 +596,7 @@ export class Timeline extends TimelineEventsEmitter {
       this._drag.target = this._setElementDragState(target, target.val);
 
       if (target.type === TimelineElementType.Keyframe) {
+        this._groupSelected = false;
         this._startedDragWithCtrl = this._controlKeyPressed(args);
         this._startedDragWithShiftKey = args.shiftKey;
         // get all related selected keyframes if we are selecting one.
@@ -605,13 +609,17 @@ export class Timeline extends TimelineEventsEmitter {
         });
       } else if (target.type === TimelineElementType.Group) {
         const keyframes = this._drag.target.keyframes;
-
+        // this._startedDragWithCtrl = this._controlKeyPressed(args);
+        this._groupSelected = true;
+        // get all related selected keyframes if we are selecting one.
+        if (keyframes) {
+          this._selectInternal(keyframes, TimelineSelectionMode.Normal, TimelineSelectionType.group);
+        }
         if (keyframes && Array.isArray(keyframes)) {
           this._drag.elements = keyframes.map((keyframe) => {
             return this._setElementDragState(this._convertToTimelineElement(this._drag?.target.row || null, keyframe), keyframe.val);
           });
         }
-        this._emitGroupSelected({ drag: this._drag, mode: 'group' });
       } else {
         this._drag.elements = [this._drag.target];
       }
@@ -904,6 +912,9 @@ export class Timeline extends TimelineEventsEmitter {
     let isChanged = false;
     if (drag && (drag.type === TimelineElementType.Keyframe || drag.type === TimelineElementType.Group)) {
       let mode = TimelineSelectionMode.Normal;
+      if (this._groupSelected) {
+        mode = TimelineSelectionMode.Revert;
+      }
       if (this._startedDragWithCtrl && this._controlKeyPressed(pos.args)) {
         if (this._controlKeyPressed(pos.args)) {
           mode = TimelineSelectionMode.Revert;
@@ -1062,7 +1073,7 @@ export class Timeline extends TimelineEventsEmitter {
    * @param nodes keyframe or list of the keyframes to be selected.
    * @param mode selection mode.
    */
-  public _selectInternal = (nodes: TimelineKeyframe[] | TimelineKeyframe | null, mode = TimelineSelectionMode.Normal): TimelineSelectionResults => {
+  public _selectInternal = (nodes: TimelineKeyframe[] | TimelineKeyframe | null, mode = TimelineSelectionMode.Normal, type = TimelineSelectionType.keyframe): TimelineSelectionResults => {
     if (!nodes) {
       nodes = [];
     }
@@ -1126,7 +1137,11 @@ export class Timeline extends TimelineEventsEmitter {
 
     if (state.changed.length > 0) {
       state.selectionChanged = true;
-      this._emitKeyframesSelected(state);
+      if (type == TimelineSelectionType.keyframe) {
+        this._emitKeyframesSelected(state);
+      } else {
+        this._emitGroupSelected({ ...state, drag: this._drag, mode: 'group' });
+      }
     }
 
     return state;
@@ -1751,13 +1766,22 @@ export class Timeline extends TimelineEventsEmitter {
           return;
         }
 
-        this._ctx.fillStyle = TimelineStyleUtils.getRowFillColor(rowViewModel.model.style || null, this._options);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        this._ctx.fillStyle = rowViewModel.model.style ? rowViewModel.model.style : TimelineStyleUtils.getRowFillColor(rowViewModel.model.style || null, this._options);
         //this._ctx.fillRect(data.areaRect.x, data.areaRect.y, data.areaRect.w, data.areaRect.h);
         // Note: bounds used instead of the clip while clip is slow!
         const bounds = this._cutBounds(rowViewModel.size);
         if (bounds?.rect) {
           const rect = bounds?.rect;
           this._ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+          if(rowViewModel.model.moveStyle ){
+         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+         //@ts-ignore
+            this._ctx.strokeStyle = rowViewModel.model.moveStyle
+            this._ctx.lineWidth = 1;
+            this._ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          }
         }
 
         this._renderGroupBounds(rowViewModel);
@@ -1787,14 +1811,24 @@ export class Timeline extends TimelineEventsEmitter {
         return;
       }
 
+      let selectedNum = 0;
+      groupsViewModels.keyframesViewModels.forEach(e => {
+        if (e.model.selected) {
+          selectedNum++
+        }
+      })
+      const isGroupSelected = selectedNum == groupsViewModels.keyframesViewModels.length;
       // get the bounds on a canvas
       const rectBounds = this._cutBounds(groupsViewModels.size);
       if (rectBounds?.rect) {
         this._ctx.fillStyle = keyframeLaneColor;
         const rect = rectBounds.rect;
         this._ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
-        this._ctx.strokeStyle  = '#FFEE32';
-        this._ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+        this._ctx.strokeStyle = isGroupSelected ? '#FFEE32' : keyframeLaneColor;
+        if (rect.width) {
+          this._ctx.lineWidth = 2;
+          this._ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+        }
       }
     });
   };
@@ -2777,8 +2811,8 @@ export class Timeline extends TimelineEventsEmitter {
   };
   _emitGroupSelected = (state: any): TimelineSelectedEvent => {
     const args = new TimelineSelectedEvent();
-    // args.selected = state.selected;
-    // args.changed = state.changed;
+    args.selected = state.selected;
+    args.changed = state.changed;
     args.drag = state.drag;
     args.mode = state.mode;
     this.emit<TimelineSelectedEvent>(TimelineEvents.Selected, args);
