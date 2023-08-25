@@ -495,7 +495,7 @@
       logMessage('doubleclick:' + obj.val + '.  target:' + type + '. ' + Math.floor(obj.pos.x) + 'x' + Math.floor(obj.pos.y), 2);
     });
 
-    timeline.onScroll(function (obj) {
+    timeline.onScroll(function (obj) {  
       var options = timeline.getOptions();
       if (options) {
         // Synchronize component scroll renderer with HTML list of the nodes.
@@ -506,6 +506,9 @@
       }
       showActivePositionInformation();
     });
+    timeline.onZoom(function (obj) {
+      // console.log(timeline.getZoom());
+    })
     timeline.onScrollFinished(function (obj) {
       // Stop move component screen to the timeline when user start manually scrolling.
       logMessage('on scroll finished', 2);

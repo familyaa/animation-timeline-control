@@ -215,6 +215,10 @@ export declare class Timeline extends TimelineEventsEmitter {
      * Get current zoom level.
      */
     getZoom: () => number;
+    /**
+     * 取消高亮
+     */
+    cancelHighlight: () => any;
     _getClickDetectionRadius: (point: TimelineMouseData) => number;
     /**
      * @param args
@@ -531,6 +535,10 @@ export declare class Timeline extends TimelineEventsEmitter {
      */
     onScroll: (callback: (eventArgs: TimelineScrollEvent) => void) => void;
     /**
+   * Subscribe user callback on scroll event
+   */
+    onZoom: (callback: (eventArgs: TimelineScrollEvent) => void) => void;
+    /**
      * Subscribe on scroll finished event.
      */
     onScrollFinished: (callback: (eventArgs: TimelineScrollEvent) => void) => void;
@@ -539,6 +547,14 @@ export declare class Timeline extends TimelineEventsEmitter {
      * Emit internally scroll eve
      */
     _emitScrollEvent: (args: Event | null, scrollProgrammatically: boolean, eventType?: TimelineEvents) => TimelineScrollEvent;
+    /**
+     * zoom事件
+     * @param args
+     * @param scrollProgrammatically
+     * @param eventType
+     * @returns
+     */
+    _emitZoomEvent: (args: Event | null, scrollProgrammatically: boolean, eventType?: TimelineEvents) => TimelineScrollEvent;
     _emitKeyframeChanged: (element: TimelineElementDragState, source?: TimelineEventSource) => TimelineKeyframeChangedEvent;
     _emitDragStartedEvent: (dragState: TimelineDraggableData) => TimelineDragEvent | null;
     /**

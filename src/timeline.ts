@@ -452,6 +452,7 @@ export class Timeline extends TimelineEventsEmitter {
       this.scrollLeft = newScrollLeft;
 
       this.redraw();
+      this._emitZoomEvent(null, true);
     }
   };
   /**
@@ -521,6 +522,14 @@ export class Timeline extends TimelineEventsEmitter {
     }
     return 1;
   };
+  /**
+   * 取消高亮
+   */
+  cancelHighlight = (): any => {
+    this._selectInternal(null)
+    this.redraw()
+  }
+
   _getClickDetectionRadius = (point: TimelineMouseData): number => {
     const defaultValue = this._consts.clickDetectionMinRadius || 1;
     return Math.max(defaultValue, point?.radius || defaultValue);
@@ -608,12 +617,12 @@ export class Timeline extends TimelineEventsEmitter {
           return this._setElementDragState(element, element.val);
         });
       } else if (target.type === TimelineElementType.Group) {
-        const keyframes = this._drag.target.keyframes;
-        // this._startedDragWithCtrl = this._controlKeyPressed(args);
+        const keyframes = target.keyframes;
+        this._startedDragWithCtrl = this._controlKeyPressed(args);
         this._groupSelected = true;
         // get all related selected keyframes if we are selecting one.
-        if (keyframes) {
-          this._selectInternal(keyframes, TimelineSelectionMode.Normal, TimelineSelectionType.group);
+        if (keyframes && !this._controlKeyPressed(args)) {
+          this._selectInternal(keyframes);
         }
         if (keyframes && Array.isArray(keyframes)) {
           this._drag.elements = keyframes.map((keyframe) => {
@@ -923,7 +932,11 @@ export class Timeline extends TimelineEventsEmitter {
         mode = TimelineSelectionMode.Append;
       }
       // Reverse selected keyframe selection by a click:
-      isChanged = this._selectInternal(drag?.target?.keyframe || null, mode).selectionChanged || isChanged;
+      const keyframes = this._groupSelected ? drag.target.keyframes : drag.target.keyframe;
+      if (keyframes && this._controlKeyPressed(pos.args)) {
+        isChanged = this._selectInternal(keyframes || null, mode).selectionChanged || isChanged;
+      }
+
 
       if (pos.args.shiftKey && this._options?.timelineDraggable !== false) {
         // Set current timeline position if it's not a drag or selection rect small or fast click.
@@ -931,7 +944,10 @@ export class Timeline extends TimelineEventsEmitter {
       }
     } else {
       // deselect keyframes if any:
-      isChanged = this._selectInternal(null).selectionChanged || isChanged;
+
+      if (pos.args instanceof MouseEvent && pos.args.button == 0) {
+        isChanged = this._selectInternal(null).selectionChanged || isChanged;
+      }
 
       if (this._options?.timelineDraggable !== false) {
         // change timeline pos:
@@ -1137,11 +1153,9 @@ export class Timeline extends TimelineEventsEmitter {
 
     if (state.changed.length > 0) {
       state.selectionChanged = true;
-      if (type == TimelineSelectionType.keyframe) {
-        this._emitKeyframesSelected(state);
-      } else {
-        this._emitGroupSelected({ ...state, drag: this._drag, mode: 'group' });
-      }
+
+      this._emitKeyframesSelected(state);
+
     }
 
     return state;
@@ -1775,9 +1789,9 @@ export class Timeline extends TimelineEventsEmitter {
         if (bounds?.rect) {
           const rect = bounds?.rect;
           this._ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
-          if(rowViewModel.model.moveStyle ){
-         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-         //@ts-ignore
+          if (rowViewModel.model.moveStyle) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
             this._ctx.strokeStyle = rowViewModel.model.moveStyle
             this._ctx.lineWidth = 1;
             this._ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -2727,6 +2741,12 @@ export class Timeline extends TimelineEventsEmitter {
     this.on(TimelineEvents.Scroll, callback);
   };
   /**
+ * Subscribe user callback on scroll event
+ */
+  public onZoom = (callback: (eventArgs: TimelineScrollEvent) => void): void => {
+    this.on(TimelineEvents.Zoom, callback);
+  };
+  /**
    * Subscribe on scroll finished event.
    */
   public onScrollFinished = (callback: (eventArgs: TimelineScrollEvent) => void): void => {
@@ -2747,6 +2767,20 @@ export class Timeline extends TimelineEventsEmitter {
     } as TimelineScrollEvent;
     super.emit(eventType, scrollEvent);
     return scrollEvent;
+  };
+  /**
+   * zoom事件
+   * @param args 
+   * @param scrollProgrammatically 
+   * @param eventType 
+   * @returns 
+   */
+  _emitZoomEvent = (args: Event | null, scrollProgrammatically: boolean, eventType = TimelineEvents.Zoom): TimelineScrollEvent => {
+    const zoomEvent = {
+      args: args
+    } as TimelineScrollEvent;
+    super.emit(eventType, zoomEvent);
+    return zoomEvent;
   };
   _emitKeyframeChanged = (element: TimelineElementDragState, source: TimelineEventSource = TimelineEventSource.Programmatically): TimelineKeyframeChangedEvent => {
     const args = new TimelineKeyframeChangedEvent();

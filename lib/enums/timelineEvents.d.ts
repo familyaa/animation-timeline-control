@@ -11,5 +11,6 @@ export declare enum TimelineEvents {
     Scroll = "scroll",
     ScrollFinished = "scrollFinished",
     DoubleClick = "doubleClick",
-    MouseDown = "mouseDown"
+    MouseDown = "mouseDown",
+    Zoom = "zoom"
 }
