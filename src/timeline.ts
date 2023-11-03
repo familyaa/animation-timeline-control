@@ -402,8 +402,8 @@ export class Timeline extends TimelineEventsEmitter {
       if (!this._isPanStarted) {
         this._clearScrollFinishedTimer();
 
-        // this.rescale();
-        // this.redraw();
+        this.rescale();
+        this.redraw();
       }
       this._emitScrollEvent(args, scrollProgrammatically, TimelineEvents.ScrollFinished);
     }, this._consts.scrollFinishedTimeoutMs);
@@ -621,7 +621,7 @@ export class Timeline extends TimelineEventsEmitter {
         this._startedDragWithCtrl = this._controlKeyPressed(args);
         this._groupSelected = true;
         // get all related selected keyframes if we are selecting one.
-        if (keyframes && !this._controlKeyPressed(args)) {
+        if (keyframes && !this._controlKeyPressed(args) && args instanceof MouseEvent && args.button == 0) {
           this._selectInternal(keyframes);
         }
         if (keyframes && Array.isArray(keyframes)) {
